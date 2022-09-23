@@ -25,8 +25,10 @@ source-repository head
 
 library
   exposed-modules:
+      Data
       Lib
-      Tree
+      Query
+      Transaction
   other-modules:
       Paths_datlite
   hs-source-dirs:
