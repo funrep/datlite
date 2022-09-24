@@ -1,5 +1,7 @@
 module Data where
 
+import Data.List
+
 type EntityId = Int
 
 type TxnId = Int
@@ -34,6 +36,7 @@ type Name = String
 data Type
   = IntType
   | StrType
+  | EntType
   deriving (Show, Eq)
 
 data Cardinality
@@ -41,7 +44,7 @@ data Cardinality
   | Many
   deriving (Show, Eq)
 
-data Schema = Schema Name Type Cardinality
+data Schema = Schema Name Type
   deriving (Show, Eq)
 
 data Db = Db
@@ -50,4 +53,14 @@ data Db = Db
   , datoms :: [Datom]
   , schemas :: [Schema]
   }
-  deriving (Show, Eq)
+  deriving (Eq)
+
+instance Show Db where
+  show (Db txnCount entCount datoms schemas) =
+    show txnCount ++ "\n" ++
+    show entCount ++ "\n" ++
+    show schemas ++ "\n" ++
+    intercalate "\n" (map show datoms)
+
+newDb :: Db
+newDb = Db 0 0 [] []

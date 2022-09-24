@@ -4,7 +4,7 @@ import Data
 
 data TransactData
   = ASchema Schema
-  | AData Attribute Value
+  | AEntity [(Attribute, Value)]
   deriving (Show, Eq)
 
 newtype Transaction = Transaction [TransactData]
@@ -19,8 +19,9 @@ transact' [] (Db txnCount entCount datoms schemas) =
 transact' ((ASchema schema):rest) (Db txnCount entCount datoms schemas) =
   let newDb = Db txnCount entCount datoms (schema:schemas)
   in transact' rest newDb
-transact' ((AData attr val):rest) (Db txnCount entCount datoms schemas) =
-  let entCount' = entCount + 1
-      datom = Datom entCount' attr val txnCount
-      newDb = Db txnCount entCount' (datom:datoms) schemas
+transact' ((AEntity entries):rest) (Db txnCount entCount datoms schemas) =
+  let newDb = Db txnCount (entCount + 1) (go entries) schemas
   in transact' rest newDb
+  where
+    go [] = datoms
+    go ((attr, val):rest) = Datom entCount attr val txnCount : go rest
