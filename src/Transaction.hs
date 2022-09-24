@@ -5,6 +5,7 @@ import Data
 data TransactData
   = ASchema Schema
   | AEntity [(Attribute, Value)]
+  | Retract EntityId
   deriving (Show, Eq)
 
 newtype Transaction = Transaction [TransactData]
@@ -25,3 +26,7 @@ transact' ((AEntity entries):rest) (Db txnCount entCount datoms schemas) =
   where
     go [] = datoms
     go ((attr, val):rest) = Datom entCount attr val txnCount : go rest
+transact' ((Retract entId):rest) (Db txnCount entCount datoms schemas) =
+  let datoms' = filter (\d -> getId d == entId || getVal d == EntId entId) datoms
+      newDb = Db txnCount entCount datoms' schemas
+  in transact' rest newDb

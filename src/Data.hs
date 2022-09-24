@@ -14,11 +14,6 @@ data Value
   | EntId Int
   deriving (Show, Eq)
 
-data Op
-  = Add
-  | Retract
-  deriving (Show, Eq)
-
 data Datom = Datom EntityId Attribute Value TxnId
   deriving (Show, Eq)
 
