@@ -11,8 +11,11 @@ type Attribute = String
 data Value
   = IntVal Int
   | StrVal String
-  | EntId Int
+  | EntId EntityId
+  | TempId TempId
   deriving (Show, Eq)
+
+type TempId = String
 
 data Datom = Datom EntityId Attribute Value TxnId
   deriving (Show, Eq)
