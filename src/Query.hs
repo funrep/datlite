@@ -88,12 +88,12 @@ unifyWith (w1, ents1) (w2, ents2) datoms
           else pure $ ents1
       (_, Just (valVar1, attr1), Just (entVar2, attr2), _) ->
         if valVar1 == entVar2
-          then maybe (Left TypeError) Right $ unifyOnValVar2 (attr1, ents1) ents2 datoms
+          then maybe (Left TypeError) Right $ unifyOnValVar (attr1, ents1) ents2 datoms
           else pure $ ents1
       (_, _, _, _) -> pure $ ents1
 
-unifyOnValVar2 :: (Attribute, [EntityId]) -> [EntityId] -> [Datom] -> Maybe [EntityId]
-unifyOnValVar2 (attr1, ents1) ents2 datoms =
+unifyOnValVar :: (Attribute, [EntityId]) -> [EntityId] -> [Datom] -> Maybe [EntityId]
+unifyOnValVar (attr1, ents1) ents2 datoms =
   let vals1 = map (\d -> (getId d, getVal d)) $ filter (\d -> getId d `elem` ents1 && getAttr d == attr1) datoms
       f (_id, val) = case val of
         EntId id -> Just $ id `elem` ents2
