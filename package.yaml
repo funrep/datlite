@@ -50,5 +50,6 @@ tests:
     dependencies:
     - datlite
     - tasty
+    - tasty-hunit
     - tasty-quickcheck
     - QuickCheck
