@@ -65,7 +65,7 @@ unifyBindings :: [(Var, Val)] -> [(Var, Val)] -> Maybe [(Var, Val)]
 unifyBindings bindings1 bindings2 =
   let joined1 = joinMap bindings1 bindings2
       joined2 = joinMap bindings2 bindings1
-  in if joined1 == joined2
+  in if sort joined1 == sort joined2
     then Just joined1
     else Nothing
 

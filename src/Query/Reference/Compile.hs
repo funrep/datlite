@@ -23,7 +23,7 @@ refQueryEngine vars clauses facts rules =
     toRefVal (StrVal val) = val
     toRefVal (EntVal ent) = ent
 
-    toVal val = StrVal val
+    toVal val = EntVal val
 
 toCommonForm :: [[(Var, Val)]] -> [[(String, String)]]
 toCommonForm = map (map (\(k, v) -> (k, fromVal v)))

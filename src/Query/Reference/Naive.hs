@@ -54,7 +54,7 @@ applyRule facts rule = facts `union` ruleAsFacts facts rule
 
 ruleAsFacts :: [Fact] -> Rule -> [Fact]
 ruleAsFacts facts rule@(Rule name vars _) =
-  let allBindings = generateBindings facts rule
+  let allBindings = generateBindings (facts) rule
   in map (substituteRule name vars) allBindings
 
 substituteRule :: Name -> [Var] -> [(Var, Expr)] -> Fact
@@ -82,7 +82,7 @@ unifyBindings :: [(Var, Expr)] -> [(Var, Expr)] -> Maybe [(Var, Expr)]
 unifyBindings bindings1 bindings2 =
   let joined1 = joinMap bindings1 bindings2
       joined2 = joinMap bindings2 bindings1
-  in if joined1 == joined2
+  in if sort joined1 == sort joined2
     then Just joined1
     else Nothing
 
