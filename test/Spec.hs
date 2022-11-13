@@ -1,6 +1,7 @@
 import Test.Tasty
 import Test.Tasty.QuickCheck
 import Test.Tasty.HUnit
+import Data.List (sort)
 
 import Test.Gen
 
@@ -31,23 +32,23 @@ rules =
 
 referenceTests = testGroup "Test reference query engine"
   [ testCase "carol :ancestor Y = dennis, david" $
-      toCommonForm (refQueryEngine ["Y"] [RuleClause "ancestor" [ExprVal (EntVal "carol"), ExprVar "Y"]] db rules)
-        @?= [[("Y", "dennis")], [("Y", "david")]]
+      (sort . toCommonForm) (refQueryEngine ["Y"] [RuleClause "ancestor" [ExprVal (EntVal "carol"), ExprVar "Y"]] db rules)
+        @?= sort [[("Y", "dennis")], [("Y", "david")]]
   , testCase "X :ancestor carol = bob, alice" $
-      toCommonForm (refQueryEngine ["X"] [RuleClause "ancestor" [ExprVar "X", ExprVal (EntVal "carol")]] db rules)
-        @?= [[("X", "bob")], [("X", "alice")]]
+      (sort . toCommonForm) (refQueryEngine ["X"] [RuleClause "ancestor" [ExprVar "X", ExprVal (EntVal "carol")]] db rules)
+        @?= sort [[("X", "bob")], [("X", "alice")]]
   ]
 
 semiNaiveTests = testGroup "Test semi-naive query engine"
   [ testProperty "reference implementation" $ forAll genQueryEngineInput $
       \(vars, clauses, facts, rules) ->
-        toCommonForm (q vars clauses facts rules) == toCommonForm (refQueryEngine vars clauses facts rules)
+        (sort . toCommonForm) (q vars clauses facts rules) == (sort . toCommonForm) (refQueryEngine vars clauses facts rules)
   , testCase "carol :ancestor Y = dennis, david" $
-      toCommonForm (q ["Y"] [RuleClause "ancestor" [ExprVal (EntVal "carol"), ExprVar "Y"]] db rules)
-        @?= [[("Y", "dennis")], [("Y", "david")]]
+      (sort . toCommonForm) (q ["Y"] [RuleClause "ancestor" [ExprVal (EntVal "carol"), ExprVar "Y"]] db rules)
+        @?= sort [[("Y", "dennis")], [("Y", "david")]]
   , testCase "X :ancestor carol = bob, alice" $
-      toCommonForm (q ["X"] [RuleClause "ancestor" [ExprVar "X", ExprVal (EntVal "carol")]] db rules)
-        @?= [[("X", "bob")], [("X", "alice")]]
+      (sort . toCommonForm) (q ["X"] [RuleClause "ancestor" [ExprVar "X", ExprVal (EntVal "carol")]] db rules)
+        @?= sort [[("X", "bob")], [("X", "alice")]]
   ]
 
 main = defaultMain $ testGroup "datlite" 

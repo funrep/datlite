@@ -93,7 +93,7 @@ joinMap ((k, v):kvs) ds = (k, v) : joinMap kvs (filter (\(k', _) -> k /= k') ds)
 evalClause :: [Fact] -> Clause -> [[(Var, Expr)]]
 evalClause facts clause =
   let matchedFacts = filter (unify clause) facts
-  in map (asBinding clause) matchedFacts
+  in filter (not . null) $ map (asBinding clause) matchedFacts
 
 unify :: Clause -> Fact -> Bool
 unify (Pattern ent1 attr1 val1) (Triple ent2 attr2 val2) =
